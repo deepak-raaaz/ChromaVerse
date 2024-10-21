@@ -84,9 +84,13 @@ function generatePalette() {
 // Render palettes
 function renderPalettes() {
   palettesContainer.innerHTML = "";
+  const savedPalettes = JSON.parse(localStorage.getItem("savedPalettes")) || [];
+
   palettes.forEach((palette) => {
     const paletteCard = document.createElement("div");
     paletteCard.className = "palette-card glassmorphism";
+    paletteCard.setAttribute("data-aos", "fade-up");
+    paletteCard.setAttribute("data-aos-delay", "300");
 
     const colorsDiv = document.createElement("div");
     colorsDiv.className = "palette-colors";
@@ -104,8 +108,12 @@ function renderPalettes() {
     actionsDiv.className = "palette-actions";
 
     const saveBtn = document.createElement("button");
-    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
-    saveBtn.addEventListener("click", () => savePalette(palette));
+    
+    // Check if the palette is already saved
+    const isSaved = savedPalettes.some(p => p.id === palette.id);
+    saveBtn.innerHTML = isSaved ? '<i class="fas fa-times"></i> Unsave' : '<i class="fas fa-save"></i> Save';
+
+    saveBtn.addEventListener("click", () => savePalette(palette, saveBtn));
 
     const shareBtn = document.createElement("button");
     shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Share';
@@ -170,11 +178,30 @@ function copyToClipboard(text) {
   );
 }
 
-function savePalette(palette) {
-  const savedPalettes = JSON.parse(localStorage.getItem("savedPalettes")) || [];
-  savedPalettes.push(palette);
-  localStorage.setItem("savedPalettes", JSON.stringify(savedPalettes));
-  showToast("Palette saved successfully!", 'success');
+function savePalette(palette, saveBtn) {
+  let savedPalettes = JSON.parse(localStorage.getItem("savedPalettes")) || [];
+
+  // Check if the palette is already saved
+  const paletteIndex = savedPalettes.findIndex(p => p.id === palette.id);
+
+  if (paletteIndex !== -1) {
+    // If the palette is already saved, remove it (unsave)
+    savedPalettes.splice(paletteIndex, 1);
+    localStorage.setItem("savedPalettes", JSON.stringify(savedPalettes));
+    showToast("Palette unsaved!", 'info');
+
+    // Update button text to "Save"
+    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+  } else {
+    // If the palette is not saved, save it
+    savedPalettes.push(palette);
+    localStorage.setItem("savedPalettes", JSON.stringify(savedPalettes));
+    showToast("Palette saved successfully!", 'success');
+
+    // Update button text to "Unsave"
+    saveBtn.innerHTML = '<i class="fas fa-times"></i> Unsave';
+  }
+
 }
 
 // Open snapshot modal
