@@ -2,20 +2,26 @@
     --primary: #4A90E2;
     --secondary: #50E3C2;
     --accent: #F5A623;
-    --background: #f0f0f0;
+    --background: #f0f4f8;
     --text: #333333;
     --card-bg: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.1); 
+    --shadow: rgba(0, 0, 0, 0.044); 
+    --border-color: #e3e3e3;
+    --surface-color: #F1F5F9;
+    --slate-400: #334155
 }
 
 .dark-mode {
     --primary: #3D52A0;
     --secondary: #7091E6;
-    --accent: #ADBBDA;
-    --background: #212A31;
+    --accent: #1A1F25;
+    --background: #0E1217;
     --text: #f0f0f0;
-    --card-bg: #2E3944;
-    --shadow: rgba(255, 255, 255, 0.1);
+    --card-bg: #131920;
+    --shadow: rgba(9, 8, 8, 0.144);
+    --border-color: #1E293B;
+    --surface-color: #272d35;
+    --slate-400: #94A3B8;
 }
 
 * {
@@ -51,29 +57,39 @@ h1 {
 }
 
 .glassmorphism {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--card-bg); 
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); 
     border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
     box-shadow: 0 8px 32px 0 var(--shadow);
+    overflow: hidden; 
+    position: relative; 
 }
 
 .input-section {
     display: flex;
     justify-content: center;
     align-items: center;
-    
     margin-bottom: 2rem;
 }
 
 .color-input {
-    width: 70%;
+    background: transparent;
+    width: 100%;
     padding: 0.8rem;
     font-size: 1rem;
     border: none;
     border-radius: 5px 0 0 5px;
-    background-color: var(--card-bg);
     color: var(--text);
+    
+    &:active {
+        outline: none;
+    }
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
 }
 
 .color-input::placeholder {
@@ -86,6 +102,9 @@ h1 {
 }
 
 .generate-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
     border: none;
@@ -94,8 +113,8 @@ h1 {
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    gap: 0.8rem; 
 }
-
 .generate-btn:hover {
     background-color: var(--secondary);
 }
@@ -142,6 +161,7 @@ h1 {
     border-radius: 5px;
     background-color: var(--card-bg);
     transition: color 0.5s ease;
+    border: 1px solid var(--border-color);
 }
 
 .mode-toggle {
@@ -205,6 +225,13 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--slate-400);
+    gap: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .palette-actions button:hover {
