@@ -16,6 +16,8 @@ const shareInstagram = document.getElementById("shareInstagram");
 const sharePinterest = document.getElementById("sharePinterest");
 const colorCodesDiv = document.getElementById('copy-palette-codes');
 const copyButton = document.getElementById('copyToClipboard');
+//delete button
+const deleteBtn = document.getElementById('deleteBtn');
 
 
 let palettes = [];
@@ -115,13 +117,18 @@ function renderPalettes() {
 
     saveBtn.addEventListener("click", () => savePalette(palette, saveBtn));
 
+    //delete button
+    const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete';
+                deleteBtn.addEventListener('click', () => deletePalette(palette));
+
     const shareBtn = document.createElement("button");
     shareBtn.innerHTML = '<i class="fas fa-share-alt"></i> Share';
     shareBtn.addEventListener("click", () => openSnapshotModal(palette));
 
     actionsDiv.appendChild(saveBtn);
     actionsDiv.appendChild(shareBtn);
-
+    actionsDiv.appendChild(deleteBtn);
     paletteCard.appendChild(colorsDiv);
     paletteCard.appendChild(actionsDiv);
     palettesContainer.appendChild(paletteCard);
@@ -203,6 +210,28 @@ function savePalette(palette, saveBtn) {
   }
 
 }
+// Delete palette
+function deletePalette(selectedPalette) {
+  // Show confirmation prompt
+  const userConfirmed = confirm("Are you sure you want to delete this palette?");
+  
+  if (userConfirmed) {
+    // Remove from local storage
+    const savedPalettes = JSON.parse(localStorage.getItem('savedPalettes')) || [];
+    const updatedPalettes = savedPalettes.filter(
+      (palette) => palette.id !== selectedPalette.id
+    );
+    localStorage.setItem('savedPalettes', JSON.stringify(updatedPalettes));
+
+    // Remove from UI
+    palettes = palettes.filter((palette) => palette.id !== selectedPalette.id);
+    renderPalettes();
+    showToast('Palette deleted successfully!', 'success');
+  } else {
+    showToast('Palette deletion cancelled.', 'info');
+  }
+}
+
 
 // Open snapshot modal
 function openSnapshotModal(palette) {
