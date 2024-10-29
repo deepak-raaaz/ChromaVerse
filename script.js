@@ -212,25 +212,33 @@ function savePalette(palette, saveBtn) {
 }
 // Delete palette
 function deletePalette(selectedPalette) {
-  // Show confirmation prompt
-  const userConfirmed = confirm("Are you sure you want to delete this palette?");
-  
-  if (userConfirmed) {
-    // Remove from local storage
-    const savedPalettes = JSON.parse(localStorage.getItem('savedPalettes')) || [];
-    const updatedPalettes = savedPalettes.filter(
-      (palette) => palette.id !== selectedPalette.id
-    );
-    localStorage.setItem('savedPalettes', JSON.stringify(updatedPalettes));
+  // Show confirmation dialog using SweetAlert2
+  Swal.fire({
+    title: "Are you sure?",
+    text: "This action cannot be undone!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "No, cancel",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // If confirmed, delete the palette
+      const savedPalettes = JSON.parse(localStorage.getItem('savedPalettes')) || [];
+      const updatedPalettes = savedPalettes.filter((palette) => palette.id !== selectedPalette.id);
+      localStorage.setItem('savedPalettes', JSON.stringify(updatedPalettes));
 
-    // Remove from UI
-    palettes = palettes.filter((palette) => palette.id !== selectedPalette.id);
-    renderPalettes();
-    showToast('Palette deleted successfully!', 'success');
-  } else {
-    showToast('Palette deletion cancelled.', 'info');
-  }
+      // Update the UI
+      palettes = palettes.filter((palette) => palette.id !== selectedPalette.id);
+      renderPalettes();
+
+      // Show success toast
+      Swal.fire("Deleted!", "Your palette has been deleted.", "success");
+    }
+  });
 }
+
 
 
 // Open snapshot modal
